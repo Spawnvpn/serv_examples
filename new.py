@@ -1,5 +1,5 @@
 from wsgiref.simple_server import make_server
-from cgi import parse_qs, escape
+from urllib.parse import parse_qs
 
 
 def form(env):
@@ -26,13 +26,13 @@ def app(env, resp_start):
             fn = route.get(parts[0])
             if fn is not None:
                 result = fn(env)
-                with open("index.html", "r") as f:
-                    result = (f.read() % (result,)).encode("UTF-8")
+                # with open("index.html", "r") as f:
+                #     result = (f.read() % (result,)).encode("UTF-8")
         else:
             with open("index.html", "r") as f:
-                result = (f.read() % (qs_d.get('a'),)).encode("UTF-8")
+                result = [(f.read() % (qs_d.get('a'),)).encode("UTF-8")]
 
-    return [result]
+    return result
 
 
 serv = make_server("", 8080, app)
